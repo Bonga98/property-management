@@ -1,0 +1,14 @@
+//Initial setup
+
+1) Git init
+
+2) Git add .
+
+3) Git commit -m "any message"
+
+4) git remote add origin git@github.com:Bonga98/property-management.git
+
+5)  git remote set-url origin https://<Token>@github.com/Bonga98/property-management.git
+
+6) git push --set-upstream origin master
+
