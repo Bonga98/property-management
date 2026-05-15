@@ -1,4 +1,4 @@
-First Time git and github setup BDywili
+First Time git and github setup BDywili2
 ==============================================
 1) Git init
 
