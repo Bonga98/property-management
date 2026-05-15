@@ -1,5 +1,5 @@
-//Initial setup
-
+First Time git and github setup
+==============================================
 1) Git init
 
 2) Git add .
@@ -11,4 +11,8 @@
 5)  git remote set-url origin https://<Token>@github.com/Bonga98/property-management.git
 
 6) git push --set-upstream origin master
-
+=============================================
+git pull
+git add.
+git commit -m "Meaningfull comment"
+git push
