@@ -33,7 +33,7 @@ public class PropertyServiceImpl implements PropertyService {
     @Override
     public List<PropertyDTO> getAllproperties() {
        List<PropertyEntity> listofProps =  (List<PropertyEntity>)propertyRepository.findAll();
-
+        System.out.println("Inside change");
        List<PropertyDTO> propList = new ArrayList<>();
        for(PropertyEntity pe :listofProps){
           PropertyDTO dto = propertyConvertor.convertEntitytoDTO(pe);
