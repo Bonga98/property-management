@@ -4,19 +4,18 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
 @Entity
-@Table(name = "PROPERTY_TABLE")
+@Table(name = "USER_TABLE")
 @Getter
 @Setter
 @NoArgsConstructor
-public class PropertyEntity {
+public class UserEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
-    @Column(name = "PROPERTY_TITLE", nullable = false)
-    private String title;
-    private  String description;
-    private double price;
-    private String address;
+    private  String OwnerName;
+    @Column(name = "Email", nullable = false)
+    private String OwnerEmail;
+    private String phone;
+    private  String password;
 }
