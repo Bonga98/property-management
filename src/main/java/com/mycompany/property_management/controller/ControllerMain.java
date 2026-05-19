@@ -8,7 +8,7 @@ public class ControllerMain {
 
         Double total = cc.Add(5.0,10.0);
 
-        System.out.println(total);
+
 
 
 

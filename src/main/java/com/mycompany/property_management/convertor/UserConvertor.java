@@ -1,8 +1,7 @@
 package com.mycompany.property_management.convertor;
 
-import com.mycompany.property_management.dto.PropertyDTO;
+
 import com.mycompany.property_management.dto.UserDTO;
-import com.mycompany.property_management.entity.PropertyEntity;
 import com.mycompany.property_management.entity.UserEntity;
 import org.springframework.stereotype.Component;
 
@@ -27,7 +26,6 @@ public class UserConvertor {
         userDTO.setId(userEntity.getId());
         userDTO.setOwnerName(userEntity.getOwnerName());
         userDTO.setOwnerEmail(userEntity.getOwnerEmail());
-        //userDTO.setPassword(userEntity.getPassword());
         userDTO.setPhone(userEntity.getPhone());
 
         return userDTO;
