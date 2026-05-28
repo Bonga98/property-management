@@ -12,8 +12,9 @@ public class BusinessException extends RuntimeException {
 
     private List<ErrorModel> errors;
 
-    public  BusinessException(List<ErrorModel> errors){
-        this.errors =errors;
+    public BusinessException(List<ErrorModel> errors) {
+        super(errors.isEmpty() ? "Business exception" : errors.get(0).getMessage());
+        this.errors = errors;
     }
 
 

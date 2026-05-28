@@ -10,7 +10,6 @@ import com.mycompany.property_management.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -29,15 +28,7 @@ public class UserServiceImpl implements UserService {
         Optional<UserEntity> optionalUserEntity =  userRepository.findByOwnerEmail(userDTO.getOwnerEmail());
 
         if(optionalUserEntity.isPresent()){
-            //Throw an exception
-            List<ErrorModel> errorModelList = new ArrayList<>();
-            ErrorModel errorModel = new ErrorModel();
-            errorModel.setCode("EMAIL_ALREADY_EXIST");
-            errorModel.setMessage("The Email With Which You Are Trying To Register Already Exists");
-
-            errorModelList.add(errorModel);
-
-            throw new BusinessException(errorModelList);
+            throw new BusinessException(List.of(new ErrorModel("EMAIL_ALREADY_EXISTS", "The email you are trying to register already exists")));
 
         }else{
 
@@ -66,14 +57,7 @@ public class UserServiceImpl implements UserService {
 
         }else{
 
-            List<ErrorModel> errorModelList = new ArrayList<>();
-
-            ErrorModel errorModel = new ErrorModel();
-            errorModel.setCode("Invalid Login");
-            errorModel.setMessage("Incorrect Email or Password");
-            errorModelList.add(errorModel);
-
-            throw new BusinessException(errorModelList);
+            throw new BusinessException(List.of(new ErrorModel("INVALID_LOGIN", "Incorrect email or password")));
 
         }
         return  userDTO;

@@ -1,5 +1,7 @@
 package com.mycompany.property_management.exception;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -10,9 +12,11 @@ import java.util.List;
 @ControllerAdvice
 public class CustomExceptionHandler {
 
+    private static final Logger log = LoggerFactory.getLogger(CustomExceptionHandler.class);
+
     @ExceptionHandler(BusinessException.class)
     public ResponseEntity<List<ErrorModel>> handleBusinessException(BusinessException bex){
-        System.out.println("Business Exception is thrown");
+        log.error("Business exception thrown: {}", bex.getErrors());
 
         return new ResponseEntity<List<ErrorModel>>(bex.getErrors(), HttpStatus.BAD_REQUEST);
 
