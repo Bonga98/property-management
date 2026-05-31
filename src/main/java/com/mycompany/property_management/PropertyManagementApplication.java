@@ -3,7 +3,7 @@ package com.mycompany.property_management;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-// Enables springbotoconfiguration,  EnableAutoConfiguration and compnentscan
+// Enables springbootconfiguration, EnableAutoConfiguration and componentscan
 @SpringBootApplication
 public class PropertyManagementApplication {
 
