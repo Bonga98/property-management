@@ -8,6 +8,7 @@ import com.mycompany.property_management.exception.ErrorModel;
 import com.mycompany.property_management.repository.UserRepository;
 import com.mycompany.property_management.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -22,45 +23,42 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private UserConvertor userConvertor;
 
+    @Autowired
+    private BCryptPasswordEncoder passwordEncoder;
+
     @Override
     public UserDTO register(UserDTO userDTO) {
 
-        Optional<UserEntity> optionalUserEntity =  userRepository.findByOwnerEmail(userDTO.getOwnerEmail());
+        Optional<UserEntity> optionalUserEntity = userRepository.findByOwnerEmail(userDTO.getOwnerEmail());
 
-        if(optionalUserEntity.isPresent()){
+        if (optionalUserEntity.isPresent()) {
             throw new BusinessException(List.of(new ErrorModel("EMAIL_ALREADY_EXISTS", "The email you are trying to register already exists")));
-
-        }else{
-
-            UserEntity userEntity =  userConvertor.convertDTOtoEntity(userDTO);
-            userEntity = userRepository.save(userEntity);
-
-            userDTO = userConvertor.convertEntitytoDTO(userEntity);
-
-            return userDTO;
-
-
         }
 
+        // Encode the password before saving
+        userDTO.setPassword(passwordEncoder.encode(userDTO.getPassword()));
 
+        UserEntity userEntity = userConvertor.convertDTOtoEntity(userDTO);
+        userEntity = userRepository.save(userEntity);
 
+        return userConvertor.convertEntitytoDTO(userEntity);
     }
 
     @Override
     public UserDTO login(String email, String password) {
-        UserDTO userDTO = null;
 
+        Optional<UserEntity> optionalUserEntity = userRepository.findByOwnerEmail(email);
 
-        Optional<UserEntity> optionalUserEntity =  userRepository.findByOwnerEmailAndPassword(email,password);
-        if(optionalUserEntity.isPresent()){
-            userDTO = userConvertor.convertEntitytoDTO(optionalUserEntity.get());
+        if (optionalUserEntity.isPresent()) {
+            UserEntity userEntity = optionalUserEntity.get();
 
-        }else{
-
-            throw new BusinessException(List.of(new ErrorModel("INVALID_LOGIN", "Incorrect email or password")));
-
+            // Compare raw password against the stored BCrypt hash
+            if (passwordEncoder.matches(password, userEntity.getPassword())) {
+                return userConvertor.convertEntitytoDTO(userEntity);
+            }
         }
-        return  userDTO;
+
+        throw new BusinessException(List.of(new ErrorModel("INVALID_LOGIN", "Incorrect email or password")));
     }
 
 }
