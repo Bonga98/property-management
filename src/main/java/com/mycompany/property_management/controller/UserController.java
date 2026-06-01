@@ -3,6 +3,7 @@ package com.mycompany.property_management.controller;
 
 import com.mycompany.property_management.dto.UserDTO;
 import com.mycompany.property_management.service.UserService;
+import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +18,7 @@ public class UserController {
     @Autowired
     private UserService userService;
 
+    @Operation(summary = "Register a new user", description = "This is used to register the user")
     @PostMapping("/register")
     public ResponseEntity<UserDTO> register(@RequestBody UserDTO userDTO){
 
@@ -24,8 +26,8 @@ public class UserController {
         return  new ResponseEntity<>(userDTO, HttpStatus.CREATED);
 
     }
-
-    @PostMapping("/login")
+    @Operation(summary = "User login", description = "This is used for the user to login")
+    @PostMapping(path = "/login", consumes = {"application/json"}, produces = {"application/json"})
     public ResponseEntity<UserDTO> login(@RequestBody UserDTO userDTO){
 
         userDTO = userService.login(userDTO.getOwnerEmail(), userDTO.getPassword());
