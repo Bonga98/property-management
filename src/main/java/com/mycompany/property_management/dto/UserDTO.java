@@ -12,9 +12,10 @@ import lombok.Setter;
 @JsonIgnoreProperties(ignoreUnknown = true)
 @NoArgsConstructor
 public class UserDTO {
-    private  Long id;
-    private  String ownerName;
+    private Long id;
+    private String ownerName;
     private String ownerEmail;
     private String phone;
-    private  String password;
+    private String password;
+    private String token;
 }

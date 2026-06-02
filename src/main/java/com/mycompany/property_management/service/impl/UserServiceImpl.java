@@ -1,5 +1,6 @@
 package com.mycompany.property_management.service.impl;
 
+import com.mycompany.property_management.config.JwtUtil;
 import com.mycompany.property_management.convertor.UserConvertor;
 import com.mycompany.property_management.dto.UserDTO;
 import com.mycompany.property_management.entity.UserEntity;
@@ -25,6 +26,9 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
+
+    @Autowired
+    private JwtUtil jwtUtil;
 
     @Override
     public UserDTO register(UserDTO userDTO) {
@@ -54,7 +58,14 @@ public class UserServiceImpl implements UserService {
 
             // Compare raw password against the stored BCrypt hash
             if (passwordEncoder.matches(password, userEntity.getPassword())) {
-                return userConvertor.convertEntitytoDTO(userEntity);
+                UserDTO userDTO = userConvertor.convertEntitytoDTO(userEntity);
+
+                // Generate JWT token and attach it to the response
+                String token = jwtUtil.generateToken(userEntity.getOwnerEmail());
+                userDTO.setToken(token);
+                userDTO.setPassword(null); // Never return the password
+
+                return userDTO;
             }
         }
 
