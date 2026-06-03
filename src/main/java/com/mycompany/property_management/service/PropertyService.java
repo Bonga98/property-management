@@ -7,9 +7,9 @@ import java.util.List;
 
 public interface PropertyService {
 
-    PropertyDTO saveProperty(PropertyDTO propertyDTO);
+    PropertyDTO saveProperty(PropertyDTO propertyDTO, String email);
 
-    List<PropertyDTO> getAllproperties();
+    List<PropertyDTO> getAllproperties(String email);
 
      PropertyDTO updateProperty(PropertyDTO propertyDTO, Long propertyID);
 

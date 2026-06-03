@@ -95,3 +95,10 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiJ9...
 - Passwords are hashed using **BCrypt** before being stored — plain text passwords are never saved
 - Authentication uses **JWT tokens** valid for **24 hours**
 - All property endpoints require a valid token in the `Authorization` header
+
+---
+
+## Design Principles
+
+This project follows SOLID principles.
+See [SOLID.md](docs/SOLID.md) for a full breakdown with code examples.

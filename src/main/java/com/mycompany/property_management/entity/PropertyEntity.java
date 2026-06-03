@@ -16,7 +16,12 @@ public class PropertyEntity {
     private long id;
     @Column(name = "PROPERTY_TITLE", nullable = false)
     private String title;
-    private  String description;
+    private String description;
     private double price;
     private String address;
+
+    // Many properties can belong to one user
+    @ManyToOne
+    @JoinColumn(name = "USER_ID")
+    private UserEntity user;
 }

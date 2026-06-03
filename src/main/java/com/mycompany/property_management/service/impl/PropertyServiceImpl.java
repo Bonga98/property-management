@@ -3,7 +3,11 @@ package com.mycompany.property_management.service.impl;
 import com.mycompany.property_management.convertor.PropertyConvertor;
 import com.mycompany.property_management.dto.PropertyDTO;
 import com.mycompany.property_management.entity.PropertyEntity;
+import com.mycompany.property_management.entity.UserEntity;
+import com.mycompany.property_management.exception.BusinessException;
+import com.mycompany.property_management.exception.ErrorModel;
 import com.mycompany.property_management.repository.PropertyRepository;
+import com.mycompany.property_management.repository.UserRepository;
 import com.mycompany.property_management.service.PropertyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,29 +21,41 @@ public class PropertyServiceImpl implements PropertyService {
 
     @Autowired
     private PropertyRepository propertyRepository;
+
     @Autowired
-    private  PropertyConvertor propertyConvertor;
+    private PropertyConvertor propertyConvertor;
+
+    @Autowired
+    private UserRepository userRepository;
 
     @Override
-    public PropertyDTO saveProperty(PropertyDTO propertyDTO) {
+    public PropertyDTO saveProperty(PropertyDTO propertyDTO, String email) {
+        // Find the logged-in user by their email
+        UserEntity user = userRepository.findByOwnerEmail(email)
+                .orElseThrow(() -> new BusinessException(
+                        List.of(new ErrorModel("USER_NOT_FOUND", "User not found"))));
 
-       PropertyEntity pe = propertyConvertor.convertDTOtoEntity(propertyDTO);
-       pe = propertyRepository.save(pe);
+        // Link the property to the user and save
+        PropertyEntity pe = propertyConvertor.convertDTOtoEntity(propertyDTO, user);
+        pe = propertyRepository.save(pe);
 
-       propertyDTO = propertyConvertor.convertEntitytoDTO(pe);
-       return propertyDTO ;
+        return propertyConvertor.convertEntitytoDTO(pe);
     }
 
     @Override
-    public List<PropertyDTO> getAllproperties() {
-       List<PropertyEntity> listofProps =  (List<PropertyEntity>)propertyRepository.findAll();
+    public List<PropertyDTO> getAllproperties(String email) {
+        // Find the logged-in user by their email
+        UserEntity user = userRepository.findByOwnerEmail(email)
+                .orElseThrow(() -> new BusinessException(
+                        List.of(new ErrorModel("USER_NOT_FOUND", "User not found"))));
 
-       List<PropertyDTO> propList = new ArrayList<>();
-       for(PropertyEntity pe :listofProps){
-          PropertyDTO dto = propertyConvertor.convertEntitytoDTO(pe);
-          propList.add(dto);
+        // Only return properties belonging to this user
+        List<PropertyEntity> listofProps = propertyRepository.findByUser(user);
 
-       }
+        List<PropertyDTO> propList = new ArrayList<>();
+        for (PropertyEntity pe : listofProps) {
+            propList.add(propertyConvertor.convertEntitytoDTO(pe));
+        }
         return propList;
     }
 

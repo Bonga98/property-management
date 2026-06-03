@@ -3,9 +3,9 @@ package com.mycompany.property_management.controller;
 import com.mycompany.property_management.dto.PropertyDTO;
 import com.mycompany.property_management.service.PropertyService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -14,30 +14,28 @@ import java.util.List;
 @RequestMapping("/api/v1")
 public class PropertyController {
 
-
-
-    //Dependency injection
     @Autowired
     private PropertyService propertyService;
 
-        //Restful API is just a mapping of a url to a java class function
-       //http://localhost:8089/api/v1/properties/hello
-      @GetMapping("/hello")
-      public String SayHello(){
-          return "Hello";
-      }
-
-   @PostMapping("/properties")
-    public ResponseEntity<PropertyDTO> saveProperty(@RequestBody PropertyDTO propertyDTO){
-
-          propertyDTO =  propertyService.saveProperty(propertyDTO);
-       return  new ResponseEntity<>(propertyDTO, HttpStatus.CREATED);
-
+    // Returns the email of the currently logged-in user from the JWT token
+    private String getLoggedInEmail() {
+        return SecurityContextHolder.getContext().getAuthentication().getName();
     }
-    @GetMapping("/properties")
-    public ResponseEntity<List<PropertyDTO>> getAllProperties(){
 
-          List<PropertyDTO> propertyList =  propertyService.getAllproperties();
+    @GetMapping("/hello")
+    public String SayHello() {
+        return "Hello";
+    }
+
+    @PostMapping("/properties")
+    public ResponseEntity<PropertyDTO> saveProperty(@RequestBody PropertyDTO propertyDTO) {
+        propertyDTO = propertyService.saveProperty(propertyDTO, getLoggedInEmail());
+        return new ResponseEntity<>(propertyDTO, HttpStatus.CREATED);
+    }
+
+    @GetMapping("/properties")
+    public ResponseEntity<List<PropertyDTO>> getAllProperties() {
+        List<PropertyDTO> propertyList = propertyService.getAllproperties(getLoggedInEmail());
         return new ResponseEntity<>(propertyList, HttpStatus.OK);
     }
     @PutMapping("/properties/{propertyId}")
